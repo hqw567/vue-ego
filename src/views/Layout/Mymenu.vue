@@ -1,5 +1,5 @@
 <template>
-  <el-menu default-active="2" class="el-menu-vertical-demo" background-color="#2f4157" text-color="#fff" active-text-color="#ffd04b" router :collapse="isCollapse">
+  <el-menu :default-active="$route.path" class="el-menu-vertical-demo" background-color="#2f4157" text-color="#fff" active-text-color="#ffd04b" router :collapse="isCollapse">
     <h1 class="menu-title">{{ isCollapse ? '后台' : '后台管理系统' }}</h1>
     <el-menu-item index="/">
       <i class="el-icon-menu"></i>
