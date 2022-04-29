@@ -5,7 +5,7 @@
 </template>
 
 <style lang="scss">
-#app {
+body {
   background-color: #f4f4f4;
 }
 </style>

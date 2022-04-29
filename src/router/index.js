@@ -12,9 +12,13 @@ const routes = [
       {
         path: '/goods',
         name: 'Goods',
-        component: () => import('@/views/Goods/index.vue')
+        component: () => import('@/views/Goods')
       },
-
+      {
+        path: '/add-goods',
+        name: 'AddGoods',
+        component: () => import('@/views/Goods/GoodsList/AddGoods.vue')
+      },
       {
         path: '/order',
         name: 'Order',

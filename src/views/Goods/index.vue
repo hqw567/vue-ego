@@ -2,8 +2,9 @@
   <div class="goods">
     <div class="goods-top">
       <el-input v-model="input" placeholder="请输入内容"></el-input>
-      <el-button type="primary">查询</el-button>
-      <el-button type="primary">添加</el-button>
+      <el-button type="primary" @click="searchQuery">查询</el-button>
+      <el-button type="primary" @click="addGoods">页面添加</el-button>
+      <el-button type="primary" @click="addDialog">弹窗添加</el-button>
     </div>
     <div class="goods-content">
       <el-table ref="multipleTable" :data="tableData" stripe border style="width: 100%">
@@ -25,38 +26,98 @@
       </el-table>
     </div>
     <div class="goods-paging">
-      <MyPagination :pageSize="pageSize" :total="total" />
+      <MyPagination :pageSize="pageSize" :total="total" @changePage="changePage" :currentPage="currentPage" />
+    </div>
+    <div>
+      <AddDialog ref="AddDialog" />
     </div>
   </div>
 </template>
 
 <script>
 import MyPagination from '../../components/MyPagination.vue'
+import AddDialog from './GoodsList/AddDialog.vue'
 export default {
   name: 'My-Goods',
   components: {
-    MyPagination
+    MyPagination,
+    AddDialog
   },
   data() {
     return {
       input: '',
       tableData: [],
       pageSize: 10,
-      total: 1
+      total: 1,
+      isSearch: false,
+      list: [],
+      currentPage: 1
+    }
+  },
+  methods: {
+    // saveDialog() {},
+    addDialog() {
+      this.$refs.AddDialog.dialogVisible = true
+    },
+    // closeDialog() {},
+    /*
+     * 添加商品
+     */
+    addGoods() {
+      this.$router.push({ name: 'AddGoods' })
+    },
+    searchQuery() {
+      if (!this.input) {
+        this.getApiPage(1)
+        this.currentPage = 1
+        this.isSearch = false
+        return
+      }
+      this.$api
+        .getGoodsSearch({
+          search: this.input
+        })
+        .then(res => {
+          this.currentPage = 1
+          if (res.data.status >= 200 && res.data.status < 300) {
+            this.list = res.data.result
+            this.total = res.data.result.length
+            this.pageSize = 3
+            this.tableData = res.data.result.slice(0, 3)
+            this.isSearch = true
+          } else {
+            this.tableData = []
+            this.total = 1
+            this.pageSize = 1
+            this.isSearch = false
+          }
+        })
+    },
+
+    changePage(page) {
+      this.currentPage = page
+      if (this.isSearch === false) {
+        this.getApiPage(page)
+      } else {
+        this.tableData = this.list.slice((page - 1) * 3, page * 3)
+      }
+    },
+    getApiPage(page) {
+      this.$api
+        .getGoodsList({
+          page: page
+        })
+        .then(res => {
+          if (res.data.status >= 200 && res.data.status < 300) {
+            this.tableData = res.data.data
+            this.pageSize = res.data.pageSize
+            this.total = res.data.total
+          }
+        })
     }
   },
   created() {
-    this.$api
-      .getGoodsList({
-        page: 1
-      })
-      .then(res => {
-        if (res.data.status >= 200 && res.data.status < 300) {
-          this.tableData = res.data.data
-          this.pageSize = res.data.pageSize
-          this.total = res.data.total
-        }
-      })
+    this.getApiPage(1)
   }
 }
 </script>

@@ -6,6 +6,11 @@ const api = {
     return axios.get(base.goodsList, {
       params
     })
+  },
+  getGoodsSearch(params) {
+    return axios.get(base.goodsSearch, {
+      params
+    })
   }
 }
 
