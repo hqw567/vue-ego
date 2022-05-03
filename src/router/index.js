@@ -6,9 +6,16 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '',
-    name: 'Home',
     component: () => import('@/views/Layout/index.vue'),
+    meta: {
+      isLogin: true
+    },
     children: [
+      {
+        path: '/',
+        name: 'Home',
+        component: () => import('@/views/Home')
+      },
       {
         path: '/goods',
         name: 'Goods',
@@ -40,7 +47,15 @@ const routes = [
       {
         path: '/params',
         name: 'Params',
-        component: () => import('@/views/Params/Params.vue')
+        component: () => import('@/views/Params'),
+        redirect: '/params/specifications',
+        children: [
+          {
+            path: 'specifications',
+            name: 'Specifications',
+            component: () => import('@/views/Params/ParamsInfo/Specifications')
+          }
+        ]
       },
       {
         path: '/advert',
@@ -56,7 +71,7 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
-    component: () => import('@/views/Login/Login.vue')
+    component: () => import('@/views/Login/index.vue')
   }
 ]
 

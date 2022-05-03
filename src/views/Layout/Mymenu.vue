@@ -3,16 +3,21 @@
     <h1 class="menu-title">{{ isCollapse ? '后台' : '后台管理系统' }}</h1>
     <el-menu-item index="/">
       <i class="el-icon-menu"></i>
-      <span slot="title">首页</span>
+      <span slot="title">{{ $t('menu.home') }}</span>
     </el-menu-item>
     <el-menu-item index="/goods">
       <i class="el-icon-document"></i>
-      <span slot="title">商品管理</span>
+      <span slot="title">{{ $t('menu.goods') }}</span>
     </el-menu-item>
-    <el-menu-item index="/params">
-      <i class="el-icon-setting"></i>
-      <span slot="title">规格参数</span>
-    </el-menu-item>
+    <el-submenu index="/params">
+      <template slot="title">
+        <i class="el-icon-location"></i>
+        <span>规格参数</span>
+      </template>
+      <el-menu-item-group>
+        <el-menu-item index="/params/specifications"> <i class="el-icon-location"></i>规格与包装</el-menu-item>
+      </el-menu-item-group>
+    </el-submenu>
     <el-menu-item index="/advert">
       <i class="el-icon-setting"></i>
       <span slot="title">广告分类</span>
@@ -20,7 +25,7 @@
     <el-submenu index="/order">
       <template slot="title">
         <i class="el-icon-location"></i>
-        <span>订单管理</span>
+        <span>{{ $t('menu.order') }}</span>
       </template>
       <el-menu-item-group>
         <el-menu-item index="/order/order-list"> <i class="el-icon-location"></i>订单列表</el-menu-item>

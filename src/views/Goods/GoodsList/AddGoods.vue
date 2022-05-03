@@ -58,6 +58,7 @@ export default {
         sellPoint: '',
         image: '',
         descs: '',
+        cid: '',
         category: '', // 商品类目
         date1: '', // 商品时间
         date2: '' // 商品时间
@@ -73,11 +74,26 @@ export default {
       }
     }
   },
+
   methods: {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          alert('submit!')
+          // title cid  category sellPoint price num descs paramsInfo image
+          const { title, cid, category, sellPoint, price, num, descs, paramsInfo, image } = this.goodsForm
+          this.$api
+            .AddGoods({
+              title,
+              cid,
+              category,
+              sellPoint,
+              price,
+              num,
+              descs,
+              paramsInfo,
+              image
+            })
+            .then(res => {})
         } else {
           console.log('error submit!!')
           return false

@@ -19,8 +19,8 @@
         <el-table-column prop="descs" label="商品描述" show-overflow-tooltip> </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-            <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            <el-button size="mini" @click="handleEdit(scope.row)">编辑</el-button>
+            <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -29,7 +29,7 @@
       <MyPagination :pageSize="pageSize" :total="total" @changePage="changePage" :currentPage="currentPage" />
     </div>
     <div>
-      <AddDialog ref="AddDialog" />
+      <AddDialog ref="AddDialog" @AddSuccess="AddSuccess" :rowData="rowData" />
     </div>
   </div>
 </template>
@@ -51,13 +51,51 @@ export default {
       total: 1,
       isSearch: false,
       list: [],
-      currentPage: 1
+      currentPage: 1,
+      rowData: {}
     }
   },
   methods: {
-    // saveDialog() {},
+    handleDelete(row) {
+      this.$confirm('此操作将永久删除该商品, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          this.$api
+            .deleteGoods({
+              id: row.id
+            })
+            .then(res => {
+              if (res.data.status === 200) {
+                this.$message({
+                  type: 'success',
+                  message: '删除成功!'
+                })
+                this.getApiPage(1)
+              }
+            })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
+    },
+    handleEdit(row) {
+      this.$refs.AddDialog.dialogVisible = true
+      this.$refs.AddDialog.dialogName = '编辑商品'
+      console.log(row)
+      this.rowData = { ...row }
+    },
+    AddSuccess() {
+      this.getApiPage(1)
+    },
     addDialog() {
       this.$refs.AddDialog.dialogVisible = true
+      this.$refs.AddDialog.dialogName = '添加商品'
     },
     // closeDialog() {},
     /*

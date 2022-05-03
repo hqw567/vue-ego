@@ -3,11 +3,19 @@
     <div class="header">
       <div class="icon-fold" @click="Collapse"><i :class="isCollapse ? 'el-icon-s-unfold' : 'el-icon-s-fold'"></i></div>
       <div class="header-right">
-        <div class="down-menu">下拉菜单<i class="el-icon-arrow-down"></i></div>
+        <div class="down-menu">
+          <el-dropdown trigger="click" @command="clickDropdown">
+            <span class="el-dropdown-link"> 多语言<i class="el-icon-arrow-down el-icon--right"></i> </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item icon="el-icon-plus" command="zh-cn">中文</el-dropdown-item>
+              <el-dropdown-item icon="el-icon-plus" command="en">English</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </div>
         <div class="user">
           <span>Hello</span>
-          <span>Admin</span>
-          <i class="el-icon-close"></i>
+          <span>{{ userInfo.user }}</span>
+          <i class="el-icon-close" @click="exit"></i>
         </div>
       </div>
     </div>
@@ -18,12 +26,25 @@
 </template>
 
 <script>
+import { mapState, mapMutations } from 'vuex'
 export default {
   name: 'Layout-Content',
   props: ['isCollapse'],
+  computed: {
+    ...mapState('loginModule', ['userInfo'])
+  },
   methods: {
     Collapse() {
       this.$emit('Collapse')
+    },
+    clickDropdown(command) {
+      this.$i18n.locale = command
+    },
+    ...mapMutations('loginModule', ['clearUser']),
+    exit() {
+      this.clearUser()
+      localStorage.removeItem('user')
+      this.$router.push('/login')
     }
   }
 }
@@ -52,9 +73,7 @@ export default {
     display: flex;
     .down-menu {
       margin-right: 15px;
-      i {
-        font-size: 20px;
-      }
+      cursor: pointer;
     }
     .user {
       display: flex;
