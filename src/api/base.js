@@ -8,7 +8,8 @@ const base = {
   deleteGoods: '/api/api/backend/item/deleteItemById', // 删除商品
   updateGoods: '/api/api/backend/item/updateTbItem', // 编辑商品
   login: '/api/api/login',
-  params: '/api/api/backend/itemParam/selectItemParamAll'
+  params: '/api/api/backend/itemParam/selectItemParamAll',
+  addItemParam: '/api/api/backend/itemParam/insertItemParam' // 规格参数添加
 }
 
 export default base

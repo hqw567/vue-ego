@@ -38,6 +38,11 @@ const api = {
   },
   getParams(params) {
     return axios.get(base.params, { params })
+  },
+  addItemParam(params) {
+    return axios.get(base.addItemParam, {
+      params
+    })
   }
 }
 

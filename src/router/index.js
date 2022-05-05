@@ -58,13 +58,9 @@ const routes = [
         ]
       },
       {
-        path: '/advert',
-        name: 'Advert',
-        component: () => import('@/views/Advert/Advert.vue')
-      },
-      {
         path: '/user',
-        name: 'User'
+        name: 'User',
+        component: () => import('@/views/User')
       }
     ]
   },

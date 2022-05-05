@@ -18,9 +18,9 @@
         <el-menu-item index="/params/specifications"> <i class="el-icon-location"></i>规格与包装</el-menu-item>
       </el-menu-item-group>
     </el-submenu>
-    <el-menu-item index="/advert">
+    <el-menu-item index="/user">
       <i class="el-icon-setting"></i>
-      <span slot="title">广告分类</span>
+      <span slot="title">个人中心</span>
     </el-menu-item>
     <el-submenu index="/order">
       <template slot="title">
