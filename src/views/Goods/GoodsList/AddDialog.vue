@@ -48,7 +48,14 @@
         <el-button @click="closeDialog">取 消</el-button>
         <el-button type="primary" @click="saveDialog">确 定</el-button>
       </span>
-      <innerDialog ref="innerDialog" @getCategory="getCategory" />
+      <el-dialog width="40%" title="类目选择" :visible.sync="innerVisiblelei" append-to-body>
+        <TreeGoods @getCategory="getCategory" />
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="innerVisible = false">取 消</el-button>
+          <el-button type="primary" @click="showTreeData">确 定</el-button>
+        </span>
+      </el-dialog>
+
       <el-dialog width="60%" title="上传图片" :visible.sync="innerVisible" append @close="closeUpdate" append-to-body>
         <updateImg ref="UpdateImg" @closeImg="closeImg" />
       </el-dialog>
@@ -57,18 +64,21 @@
 </template>
 
 <script>
-import innerDialog from './innerDialog.vue'
+import TreeGoods from './TreeGoods.vue'
 import MyEditor from '@/components/MyEditor.vue'
 import updateImg from './UpdataImg.vue'
 export default {
   // props: ['dialogVisible'],
   props: ['rowData'],
-  components: { innerDialog, MyEditor, updateImg },
+  components: { TreeGoods, MyEditor, updateImg },
   data() {
     return {
+      isShow: false,
       dialogName: '添加商品',
       imgUrl: '',
+      treeData: {}, // 接受tree数据
       innerVisible: false,
+      innerVisiblelei: false,
       goodsForm: {
         // 表单容器-对象
         title: '', // 商品名称
@@ -100,6 +110,30 @@ export default {
     }
   },
   methods: {
+    showTreeData() {
+      this.innerVisiblelei = false
+      // 显示tree数据
+      this.goodsForm.category = this.treeData.name
+      this.goodsForm.cid = this.treeData.cid
+      // 显示规格参数--- 获取--------------
+      // this.isShow = true;
+      this.$api
+        .categoryData({
+          cid: this.treeData.cid
+        })
+        .then(res => {
+          console.log('显示规格参数--- 获取-', res.data)
+          if (res.data.status === 200) {
+            // 有类目规格配置参数-------------
+            this.isShow = true
+            // 存储规格参数
+            const result = res.data.result[res.data.result.length - 1]
+            this.groups = JSON.parse(result.paramData)
+          } else {
+            this.isShow = false
+          }
+        })
+    },
     sendEditor(val) {
       this.goodsForm.descs = val
     },
@@ -113,10 +147,9 @@ export default {
     getCategory(data) {
       this.goodsForm.category = data.name
       this.goodsForm.cid = data.cid
-      console.log(this.goodsForm.category)
     },
     clickPrimary() {
-      this.$refs.innerDialog.innerVisible = true
+      this.innerVisiblelei = true
     },
     handleClose(done) {
       this.$confirm('确认关闭？')
@@ -125,6 +158,10 @@ export default {
           done()
         })
         .catch(_ => {})
+    },
+    sendTreeData(val) {
+      console.log('tree数据', val)
+      this.treeData = val
     },
     closeDialog() {
       // this.$emit('closeDialog')
